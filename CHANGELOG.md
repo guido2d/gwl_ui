@@ -1,5 +1,12 @@
 # Cambios
 
+## 0.1.1 — 2026-09-19
+
+- `flux.css`: vuelve la regla que alinea etiqueta y control de los campos
+  (`[data-flux-field]`), que se perdía por un comentario cortado.
+- `base.css`: sin el comentario suelto al final.
+- Test que verifica que ningún archivo deje un comentario abierto.
+
 ## 0.1.0 — 2026-09-19
 
 Primera versión, extraída de Wellness on Demand (`wod_v2`).

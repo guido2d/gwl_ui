@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { compile } from '@tailwindcss/node';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 const raiz = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -65,6 +66,18 @@ test('la capa de Flux compila sola', async () => {
     assert.match(css, /\[data-flux-heading\]/);
     assert.match(css, /\.tabla-panel \[data-flux-column\]/);
     assert.match(css, /\.formulario-acceso input\[data-flux-control\]/);
+    assert.match(css, /\[data-flux-field\]:not\(ui-radio, ui-checkbox\)/);
+    assert.match(css, /\[data-flux-navbar-items\]\[data-current\]::after/);
+});
+
+test('ningún comentario queda abierto ni cerrado de más', () => {
+    for (const archivo of ['tokens', 'base', 'utilidades', 'movimiento', 'prosa', 'flux']) {
+        const css = readFileSync(path.join(raiz, 'css', `${archivo}.css`), 'utf8');
+        const aperturas = css.split('/*').length - 1;
+        const cierres = css.split('*/').length - 1;
+
+        assert.equal(aperturas, cierres, `${archivo}.css tiene ${aperturas} /* y ${cierres} */`);
+    }
 });
 
 test('el CSS base no trae la capa de Flux', async () => {

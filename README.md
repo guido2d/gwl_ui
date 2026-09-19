@@ -13,7 +13,7 @@ los nombres de tokens y utilidades son los mismos que usa esa app.
 Desde el repositorio (no se publica en npm):
 
 ```bash
-npm i github:guido2d/gwl_ui#v0.1.0
+npm i github:guido2d/gwl_ui#v0.1.1
 # o, trabajando en local con el repo al lado:
 npm i ../gwl_ui
 ```

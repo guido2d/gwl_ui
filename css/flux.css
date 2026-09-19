@@ -36,6 +36,8 @@
     font-family: var(--font-display);
     font-weight: 700;
 }
+
+/* content-start: cuando el campo vive en una grilla y la columna vecina crece
    (un mensaje de error, una descripción), el campo se estira al alto de la
    fila y sin esto la grilla reparte ese alto entre la etiqueta y el control,
    que se despegan y desalinean su icono. */
