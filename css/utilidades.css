@@ -1,0 +1,33 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — utilidades de layout y textura
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Riel horizontal (carruseles de tarjetas). El snap deja cada pieza alineada
+   al borde del contenido, no al del viewport, así que el padding del riel
+   entra en el cálculo con scroll-padding. La barra se esconde: en táctil no se
+   usa y en el teléfono se come 12 px de alto de la pieza. */
+@utility riel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    & > * {
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+}
+
+/* Grano sobre el panel: rompe el banding de los degradados y le da textura al
+   azul. Va como data URI porque una imagen para esto es un pedido de red de
+   más en la primera pantalla. */
+@utility grano {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23r)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+}
+

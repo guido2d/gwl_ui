@@ -1,0 +1,279 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Movimiento
+
+   Tres propiedades independientes, cada una con un solo dueño, para que nunca
+   se pisen entre sí (en Tailwind v4 translate/scale/rotate son propiedades
+   propias, no parte de transform):
+
+     transform → entrada de la página (aparece / medallon)
+     translate → levantar la tarjeta en hover
+     scale     → presión y zoom de la portada
+
+   Todo lo que entra usa transform y todo lo que reacciona usa las otras dos,
+   así que una tarjeta puede estar entrando y ser presionada sin conflicto.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Entrada de un bloque: sube y aparece, una sola vez, al montarse. El retraso
+   se inyecta con --retraso para armar la cascada. */
+@keyframes aparece {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+}
+
+/* El medallón del hero es el foco de la página: entra escalando. Nunca desde
+   scale(0) — nada en el mundo real aparece de la nada. */
+@keyframes aparece-medallon {
+    from {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+}
+
+/* Barras de progreso: se llenan desde la izquierda. scaleX corre en la GPU;
+   animar width dispararía layout en cada frame. */
+@keyframes crece-barra {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+/* Con movimiento reducido se conserva la opacidad (ayuda a entender que algo
+   apareció) y se elimina el desplazamiento. */
+@keyframes aparece-sin-movimiento {
+    from {
+        opacity: 0;
+    }
+}
+
+@utility aparece {
+    animation: aparece 360ms var(--ease-salida) var(--retraso, 0ms) both;
+}
+
+@utility aparece-medallon {
+    animation: aparece-medallon 460ms var(--ease-salida) var(--retraso, 0ms) both;
+}
+
+@utility crece-barra {
+    transform-origin: left center;
+    animation: crece-barra 560ms var(--ease-recorrido) var(--retraso, 240ms) both;
+}
+
+/* Cascada dentro de una grilla o una fila. Por encima de ~80ms entre piezas la
+   página empieza a sentirse lenta, así que el paso es corto y se corta en la
+   octava: más allá de eso la espera no aporta nada. */
+@utility escalonado {
+    & > *:nth-child(1) { --retraso: 0ms; }
+    & > *:nth-child(2) { --retraso: 40ms; }
+    & > *:nth-child(3) { --retraso: 80ms; }
+    & > *:nth-child(4) { --retraso: 120ms; }
+    & > *:nth-child(5) { --retraso: 160ms; }
+    & > *:nth-child(6) { --retraso: 200ms; }
+    & > *:nth-child(7) { --retraso: 240ms; }
+    & > *:nth-child(n + 8) { --retraso: 280ms; }
+}
+
+/* Resultados que se rearman con cada filtro o cada tecla del buscador: sólo
+   opacidad, sin cascada y sin desplazamiento. Un filtro se toca decenas de
+   veces por sesión y ahí una entrada larga deja de ser agradable para pasar a
+   sentirse lenta; esto confirma que la lista cambió sin costar tiempo. Con el
+   morph de Livewire sólo se anima lo que entró: las piezas que ya estaban
+   conservan su elemento y se quedan quietas. */
+@utility aparece-resultado {
+    animation: aparece-sin-movimiento 180ms var(--ease-salida) both;
+}
+
+/* Un globo del chat. Entra desde abajo y con el origen en su propio pico, así
+   parece salir de donde está quien habla en vez de caer sobre el hilo. Como el
+   morph conserva los globos que ya estaban, sólo se anima el que llegó. */
+@keyframes entra-globo {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+}
+
+@utility entra-globo {
+    transform-origin: bottom var(--pico, left);
+    animation: entra-globo 320ms var(--ease-salida) both;
+}
+
+/* Los tres puntos de la espera. El desfase es corto a propósito: separados se
+   leen como tres luces sueltas y juntos, como una sola respiración. */
+@keyframes late-punto {
+    0%,
+    60%,
+    100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes late-punto-sin-movimiento {
+    0%,
+    60%,
+    100% {
+        opacity: 0.3;
+    }
+
+    30% {
+        opacity: 1;
+    }
+}
+
+@utility late-punto {
+    animation: late-punto 1.3s var(--ease-recorrido) var(--retraso, 0ms) infinite;
+}
+
+/* Tarjeta clickeable (catálogos, listados de tarjetas). Reemplaza al atajo
+   `transition` de Tailwind, que anima una docena de propiedades: acá se nombra
+   exactamente lo que se mueve. */
+@utility tarjeta-interactiva {
+    transition:
+        translate 180ms var(--ease-salida),
+        scale 140ms var(--ease-salida),
+        box-shadow 180ms var(--ease-salida),
+        border-color 180ms var(--ease-salida);
+
+    & img {
+        transition: scale 320ms var(--ease-salida);
+    }
+
+    /* El hover va detrás del media query porque en pantallas táctiles el tap
+       dispara :hover y la tarjeta queda levantada después de soltarla. */
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            translate: 0 -3px;
+            box-shadow: var(--shadow-md);
+            border-color: color-mix(in srgb, var(--color-brand) 28%, var(--color-zinc-200));
+        }
+
+        &:hover img {
+            scale: 1.04;
+        }
+    }
+
+    &:active {
+        scale: 0.985;
+    }
+}
+
+/* Cualquier cosa que se presione: el scale mínimo confirma que la interfaz
+   escuchó el click antes de que llegue la respuesta del servidor. */
+@utility presionable {
+    transition:
+        scale 160ms var(--ease-salida),
+        filter 200ms var(--ease-salida),
+        background-color 200ms var(--ease-salida),
+        border-color 200ms var(--ease-salida),
+        color 200ms var(--ease-salida);
+
+    &:active {
+        scale: 0.97;
+    }
+}
+
+/* Fila de canal secundario del panel de acceso. En reposo no tiene ni fondo ni
+   borde, así que la flecha corriéndose apenas hacia donde lleva el enlace es la
+   única pista de que la fila entera es clickeable. */
+@utility via-acceso {
+    transition:
+        background-color 200ms var(--ease-salida),
+        scale 160ms var(--ease-salida);
+
+    & .flecha {
+        transition: translate 200ms var(--ease-salida);
+    }
+
+    /* Detrás del media query porque en pantalla táctil el tap dispara :hover y
+       la fila queda pintada después de soltarla. */
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--color-brand-softer);
+        }
+
+        &:hover .flecha {
+            translate: 2px 0;
+        }
+    }
+
+    /* En pantalla táctil el hover no existe: la presión es la única confirmación
+       de que la fila escuchó el toque antes de que arranque la navegación. */
+    &:active {
+        scale: 0.985;
+    }
+}
+
+/* Barra fija del pie en pantalla angosta. Entra desde abajo del borde cuando la
+   página ya se acomodó: si subiera junto con el resto competiría con el panel
+   de acceso, que dice exactamente lo mismo. El porcentaje la esconde entera sin
+   que la regla tenga que saber cuánto mide. */
+@keyframes entra-barra {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+@utility entra-barra {
+    animation: entra-barra 420ms var(--ease-salida) 260ms both;
+}
+
+/* Título de portada: sube desde abajo detrás de su propia máscara. Es el gesto
+   que más se nota sin agregar ruido, porque es el elemento que la persona ya
+   estaba mirando. El padding compensa que con interlineado por debajo de 1 los
+   descendentes se salen de la caja de línea y la máscara se los comería. */
+@keyframes sube-titulo {
+    from {
+        transform: translateY(112%);
+    }
+}
+
+@utility mascara-titulo {
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+}
+
+@utility sube-titulo {
+    animation: sube-titulo 760ms var(--ease-salida) var(--retraso, 0ms) both;
+}
+
+/* Movimiento reducido: menos movimiento y más suave, no cero. Va sin capa para
+   ganarle a las utilidades de arriba. */
+@media (prefers-reduced-motion: reduce) {
+    .aparece,
+    .aparece-medallon,
+    .crece-barra,
+    .entra-barra,
+    .entra-globo,
+    .sube-titulo {
+        animation-name: aparece-sin-movimiento;
+        animation-duration: 260ms;
+        animation-delay: 0ms;
+    }
+
+    /* La espera sí se sigue moviendo: es el único caso donde la animación no
+       decora sino que informa que algo está pasando. Pierde el salto y se
+       queda con el parpadeo. */
+    .late-punto {
+        animation-name: late-punto-sin-movimiento;
+    }
+
+    .tarjeta-interactiva:hover,
+    .via-acceso:hover .flecha {
+        translate: none;
+    }
+
+    .tarjeta-interactiva:hover img,
+    .tarjeta-interactiva:active,
+    .via-acceso:active,
+    .presionable:active {
+        scale: none;
+    }
+}

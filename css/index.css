@@ -1,0 +1,18 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — design system de Grupo Wellness Latina para Tailwind CSS v4
+
+   Se importa después de Tailwind:
+
+       @import 'tailwindcss';
+       @import '@gwl/ui/css/index.css';
+
+   Apps con Livewire + Flux suman, después del CSS de Flux:
+
+       @import '@gwl/ui/css/flux.css';
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@import './tokens.css';
+@import './base.css';
+@import './utilidades.css';
+@import './movimiento.css';
+@import './prosa.css';

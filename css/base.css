@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — base y tipografía
+
+   Reglas de elemento (en @layer base, así cualquier utilidad les gana) y las
+   dos utilidades tipográficas de la marca: antetitulo y cifra.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-zinc-200, currentColor);
+    }
+
+    /* Lo marcado con x-cloak no se ve hasta que Alpine lo toma: sin esto, un
+       panel con x-show parpadea abierto mientras carga el JS. */
+    [x-cloak] {
+        display: none !important;
+    }
+
+    /* Montserrat pide un interlineado cómodo para favorecer la lectura. */
+    body {
+        line-height: 1.6;
+    }
+
+    p {
+        line-height: 1.65;
+    }
+
+    /* Los títulos van en Lato aunque el resto de la página sea Montserrat. */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-display);
+    }
+}
+
+/* Antetítulo (overline) — mayúsculas con tracking amplio en Lato Bold. No se
+   llama "overline" porque Tailwind ya usa ese nombre para text-decoration. */
+@utility antetitulo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+/* Cifra destacada — Lato Black para estadísticas. */
+@utility cifra {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+/* content-start: cuando el campo vive en una grilla y la columna vecina crece

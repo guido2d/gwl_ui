@@ -1,0 +1,212 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — capa para Flux (Livewire)
+
+   Sólo para apps con livewire/flux. Se importa DESPUÉS del CSS de Flux:
+
+       @import '../../vendor/livewire/flux/dist/flux.css';
+       @import '@gwl/ui/css/flux.css';
+
+   Las reglas van sin capa porque Flux imprime sus propias utilidades
+   (font-medium, placeholder-zinc-400, h-10…) dentro de `utilities`, y ahí
+   cualquier regla en capa pierde.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Tipografía de marca sobre los componentes de Flux. Van fuera de @layer porque
+   Flux imprime sus propias utilidades (font-medium) y las capas siempre pierden
+   contra una regla sin capa. */
+/* Títulos: Lato Bold por defecto, Black cuando la vista lo pide. Flux imprime
+   font-medium en todos sus headings y esa utilidad se emite después de
+   font-bold/font-black dentro de la capa utilities, así que ganaba siempre; sin
+   capa mandan estas. Lato sólo tiene 400, 700 y 900: no hay medium ni semibold. */
+[data-flux-heading] {
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+[data-flux-heading].font-black {
+    font-weight: 900;
+}
+
+[data-flux-heading].font-normal {
+    font-weight: 400;
+}
+
+/* Botones y CTAs: Lato Bold. */
+[data-flux-button] {
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+   (un mensaje de error, una descripción), el campo se estira al alto de la
+   fila y sin esto la grilla reparte ese alto entre la etiqueta y el control,
+   que se despegan y desalinean su icono. */
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid content-start gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+/* Contraste de los campos. Flux pinta el placeholder con zinc-400 y el valor
+   con zinc-700; sobre el crudo de la gama eso deja el placeholder en 2,5:1,
+   por debajo del 4,5:1 que pide WCAG para texto. No alcanza con subir el
+   placeholder: en zinc-600 llega a 5,5:1 pero queda pegado al zinc-700 del
+   valor y el campo se lee lleno cuando está vacío. Por eso los dos se mueven
+   juntos —el valor baja a zinc-900, el placeholder sube a zinc-600— y la
+   distancia entre uno y otro queda más grande que antes.
+
+   Van sin capa porque Flux emite sus utilidades (placeholder-zinc-400,
+   text-zinc-700) dentro de utilities, y ahí cualquier regla en capa pierde.
+   El placeholder se toma de todos los input y textarea, no solo de los de
+   Flux: es el único lugar donde se decide ese color en toda la app. */
+input[data-flux-control],
+textarea[data-flux-control],
+select[data-flux-control] {
+    color: var(--color-zinc-900);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-zinc-600);
+}
+
+/* Un campo apagado conserva la jerarquía vieja: si su placeholder pesara lo
+   mismo que el de uno activo, el campo se leería editable. */
+input:disabled[data-flux-control],
+textarea:disabled[data-flux-control],
+select:disabled[data-flux-control] {
+    color: var(--color-zinc-500);
+}
+
+input:disabled::placeholder,
+textarea:disabled::placeholder {
+    color: var(--color-zinc-400);
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* Nav — los ítems viven adentro de una píldora blanca y son a su vez píldoras,
+   como un control segmentado. La barra inferior de Flux se apaga.
+
+   Los destinos que no son el actual van en Montserrat Medium —el font-medium
+   que Flux imprime en su div interno sobre el sans del cuerpo, sin regla
+   nuestra— y el actual pasa a Lato Bold. Es lo que pide el diseño
+   (docs/design_handoff_home_bento): el destino actual no sólo se pinta, también
+   cambia de voz. Como el ancho de cada ítem depende de si es el actual, las
+   píldoras corren unos pocos píxeles al cambiar de página; es un salto entre
+   navegaciones, no un temblor dentro de la misma pantalla.
+
+   El padding horizontal no se puede fijar acá: Flux imprime px-2.5! y una
+   utilidad con ! dentro de la capa utilities gana contra cualquier ! sin capa
+   (para las declaraciones importantes el orden de capas se invierte). Va como
+   px-5! en el propio ítem, en header.blade.php. */
+[data-flux-navbar-items] {
+    border-radius: 9999px !important;
+    height: 2.5rem !important;
+    color: var(--color-zinc-700) !important;
+}
+
+[data-flux-navbar-items]:hover {
+    background-color: var(--color-zinc-50) !important;
+    color: var(--color-zinc-900) !important;
+}
+
+[data-flux-navbar-items][data-current],
+[data-flux-navbar-items][data-current]:hover {
+    background-color: var(--color-brand-softer) !important;
+    color: var(--color-brand-strong) !important;
+}
+
+/* La tipografía del actual va sobre el div interno de Flux, que es el que trae
+   font-medium: una regla en el <a> la pierde contra esa utilidad. */
+[data-flux-navbar-items][data-current] [data-content] {
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+[data-flux-navbar-items][data-current]::after {
+    display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Tabla del panel (envolver la <flux:table> en .tabla-panel)
+
+   Flux piensa su tabla suelta sobre la página: quita el padding lateral de la
+   primera y la última celda (first:ps-0 / last:pe-0) y deja el encabezado con
+   el mismo peso que una celda cualquiera. Adentro de una tarjeta eso deja el
+   texto pegado al borde y el thead sin jerarquía.
+
+   Acá se devuelve el aire de los lados, se le da al encabezado el tratamiento
+   de antetítulo del manual de marca y se marcan los estados de fila (hover y
+   selección), que son los que hacen legible un listado largo.
+   ───────────────────────────────────────────────────────────────────────────── */
+.tabla-panel [data-flux-column]:first-child,
+.tabla-panel [data-flux-cell]:first-child {
+    padding-inline-start: 1.25rem;
+}
+
+.tabla-panel [data-flux-column]:last-child,
+.tabla-panel [data-flux-cell]:last-child {
+    padding-inline-end: 1.25rem;
+}
+
+.tabla-panel [data-flux-columns] {
+    background: var(--color-zinc-50);
+}
+
+.tabla-panel [data-flux-column] {
+    color: var(--color-zinc-500);
+    font-family: var(--font-display);
+    font-size: 0.65625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding-block: 0.6875rem;
+    text-transform: uppercase;
+}
+
+/* El fondo va en las celdas y no en el <tr>: la tabla de Flux usa
+   border-separate, y ahí el fondo de la fila queda por debajo del de la celda
+   y no se ve. */
+.tabla-panel [data-flux-row]:hover [data-flux-cell] {
+    background: var(--color-brand-softer);
+}
+
+.tabla-panel [data-flux-row][data-seleccionada] [data-flux-cell] {
+    background: var(--color-brand-soft);
+}
+
+/* La última fila no necesita su línea: ya la corta el borde de la tarjeta o el
+   separador del pie. */
+.tabla-panel [data-flux-rows] tr:last-child [data-flux-cell] {
+    border-bottom: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Pantallas de acceso
+
+   El acceso es la única pantalla donde el formulario es todo lo que hay: los
+   campos crecen a los 52 px del CTA y se redondean más que los del panel, para
+   que el bloque se lea como una sola pieza y no como una planilla.
+
+   Las reglas van sin capa y colgadas de `.formulario-acceso` por dos motivos
+   distintos. Sin capa, porque Flux imprime sus propias utilidades (h-10,
+   rounded-lg, text-sm) dentro de `utilities` y ahí cualquier regla en capa
+   pierde. Con ámbito, porque sin él se llevarían puestos los campos del resto
+   de la app, donde un formulario convive con tablas y filtros y no puede pesar
+   tanto.
+   ───────────────────────────────────────────────────────────────────────────── */
+.formulario-acceso input[data-flux-control] {
+    height: 3.25rem;
+    border-radius: 0.875rem;
+    font-size: 1rem;
+}
+
+.formulario-acceso [data-flux-label] {
+    font-size: 0.9375rem;
+    color: var(--color-zinc-900);
+}
+

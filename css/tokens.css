@@ -1,0 +1,104 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — tokens
+
+   Sale del manual de marca de Grupo Wellness Latina (el HEX es la fuente de
+   verdad para digital) tal como lo usa Wellness on Demand, la primera app que
+   lo implementó. Proporción de uso del manual: blanco 60, azul 24, celeste 9,
+   verde 4, naranja 3.
+
+   Todo va en @theme: cada token genera sus utilidades de Tailwind (bg-brand,
+   text-naranja-ink, rounded-card, ease-salida, shadow-md…) y queda también
+   como variable CSS en :root (var(--color-brand)). Es `static` para que las
+   variables existan aunque ninguna clase las use: un componente de React o
+   Vue puede pedir var(--color-naranja) en un style sin que Tailwind la pode.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@theme static {
+    /* Montserrat para el cuerpo (párrafos, subtítulos, captions) y Lato para
+       títulos, botones, antetítulos y cifras (utilidad font-display). Lato
+       sólo trae 400, 700 y 900: no hay medium ni semibold. */
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Lato', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    /* Neutros: la rampa zinc de Tailwind remapeada a un crudo cálido. Se
+       remapea zinc (y no se agrega una rampa nueva) porque Flux y buena parte
+       de los kits de Tailwind pintan fondos y bordes con zinc: así toman el
+       papel de la marca sin tocar sus vistas. zinc-50 es el papel de fondo;
+       zinc-200, la línea de las tarjetas. El gris #9a9a8c del manual no se usa. */
+    --color-zinc-50: #f7f2e9;
+    --color-zinc-100: #f0e9dc;
+    --color-zinc-200: #e3dbcc;
+    --color-zinc-300: #cfc5b2;
+    --color-zinc-400: #a9a091;
+    --color-zinc-500: #8f8676;
+    --color-zinc-600: #6f6659;
+    --color-zinc-700: #5b5346;
+    --color-zinc-800: #3a352c;
+    --color-zinc-900: #1e1c17;
+    --color-zinc-950: #12100c;
+
+    /* El blanco es un crudo cálido: las tarjetas no cortan contra el papel del
+       fondo. Remapea bg-white, text-white y sus opacidades. */
+    --color-white: #fffdf8;
+
+    /* Azul primario #155C8B (7:1 sobre el crudo). Sigue a --brand cuando la app
+       define un color por cliente (multi-empresa); si no, es el azul del
+       manual. strong es el azul para texto oscuro; soft y softer son tintes
+       del celeste, así el secundario aparece en los fondos suaves. */
+    --color-brand: var(--brand, #155c8b);
+    --color-brand-strong: #0b314b;
+    --color-brand-soft: #c2e4f8;
+    --color-brand-softer: #ecf7fe;
+
+    /* Celeste secundario #36A7E0. No llega a 4,5:1 contra el crudo: sólo
+       ilustraciones, íconos y detalles, nunca texto. */
+    --color-celeste: #36a7e0;
+
+    /* Naranja #F5871F: lo accionable que no lleva color de marca (y que por lo
+       tanto no cambia con el branding de un cliente). Un relleno naranja
+       lleva texto blanco en bold, por decisión de marca aunque dé 2,5:1: el
+       azul oscuro encima se leía raro. Texto naranja sobre el crudo:
+       naranja-ink. */
+    --color-naranja: #f5871f;
+    --color-naranja-soft: #ffe8d4;
+    --color-naranja-ink: #9d4700;
+
+    /* Verde acento #84BE5C en el paso 500. Remapea la rampa green de Tailwind
+       para que los estados de éxito (badges, tildes) tomen el verde de marca
+       sin tocar las vistas. Íconos de éxito: green-600 o más oscuro. */
+    --color-green-50: #f9fef6;
+    --color-green-100: #eefae7;
+    --color-green-200: #dbf2cd;
+    --color-green-300: #bee7a5;
+    --color-green-400: #9bd375;
+    --color-green-500: #84be5c;
+    --color-green-600: #6b9d49;
+    --color-green-700: #557a3b;
+    --color-green-800: #446032;
+    --color-green-900: #394f2b;
+    --color-green-950: #1d2a14;
+
+    /* Accent: el nombre que usa Flux (y varios kits) para el color de acción.
+       Ligado a --brand como brand. */
+    --color-accent: var(--brand, #155c8b);
+    --color-accent-content: color-mix(in oklab, var(--brand, #155c8b), black 18%);
+    --color-accent-foreground: #fffdf8;
+
+    /* Radios semánticos. El resto de la escala es la de Tailwind: rounded-lg
+       para controles chicos (segmentados, pestañas), rounded-xl para cajas
+       internas, rounded-full para píldoras, chips y paginador. */
+    --radius-card: 1.375rem;
+    --radius-hero: 1.75rem;
+
+    /* Curvas de movimiento. ease-salida para todo lo que entra o responde a un
+       click (arranca rápido, se siente instantáneo); ease-recorrido para lo
+       que se desplaza de un punto a otro. Nunca ease-in. */
+    --ease-salida: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-recorrido: cubic-bezier(0.77, 0, 0.175, 1);
+
+    /* Sombras suaves tintadas con el ink cálido (reemplazan las de Tailwind). */
+    --shadow-xs: 0 1px 2px rgba(31, 29, 23, 0.05);
+    --shadow-sm: 0 2px 6px rgba(31, 29, 23, 0.05), 0 1px 2px rgba(31, 29, 23, 0.04);
+    --shadow-md: 0 6px 18px rgba(31, 29, 23, 0.07), 0 2px 6px rgba(31, 29, 23, 0.05);
+    --shadow-lg: 0 14px 36px rgba(31, 29, 23, 0.09), 0 4px 10px rgba(31, 29, 23, 0.05);
+}
