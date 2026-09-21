@@ -1,6 +1,6 @@
 {
     "name": "@gwl/ui",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "Design system de Grupo Wellness Latina para Tailwind CSS v4: tokens, tipografía, movimiento, prosa, capa para Flux y logos.",
     "type": "module",
     "license": "UNLICENSED",

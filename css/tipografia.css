@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   GWL UI — escala tipográfica
+
+   Una clase por rol, con familia, tamaño, interlineado, peso y tracking. El
+   color va aparte (`text-zinc-600`, `text-brand`…): el mismo estilo se usa
+   sobre papel y sobre azul.
+
+   Los dos titulares son fluidos: bajan solos en pantalla angosta hasta el
+   tamaño que ya usaban las apps con sus propios breakpoints (68 → 44 px y
+   33 → 27 px). El resto es fijo, porque a esos cuerpos achicar el texto lo
+   vuelve ilegible antes que prolijo.
+
+   `antetitulo` y `cifra` viven en base.css: no son tamaños sino tratamientos.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Titular de un panel de presentación (acceso, portada). Uno por página. */
+@utility titular {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 2.07rem + 2.73vw, 4.25rem);
+    line-height: 1.02;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+}
+
+/* El h1 de una pantalla. */
+@utility titulo-pagina {
+    font-family: var(--font-display);
+    font-size: clamp(1.6875rem, 1.52rem + 0.68vw, 2.0625rem);
+    line-height: 1.12;
+    font-weight: 900;
+    letter-spacing: -0.024em;
+    text-wrap: balance;
+}
+
+/* Título de una pantalla de panel o de un bloque grande. */
+@utility titulo-seccion {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+}
+
+/* Título de una sección, tarjeta o modal. */
+@utility titulo-tarjeta {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+}
+
+/* Bajada debajo de un titular. Va en zinc-600. */
+@utility bajada {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* Párrafo de lectura larga suelto (un artículo entero va con cuerpo-nota). */
+@utility nota {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    font-weight: 400;
+}
+
+/* Texto corrido por defecto. */
+@utility cuerpo {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* Texto de interfaz: descripciones, celdas, campos. */
+@utility cuerpo-sm {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+}
+
+/* Etiqueta de un campo. Va en zinc-900. */
+@utility etiqueta {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.25;
+    font-weight: 500;
+}
+
+/* Chips, contadores y migas. */
+@utility leyenda {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+}

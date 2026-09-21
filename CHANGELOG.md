@@ -1,5 +1,14 @@
 # Cambios
 
+## 0.2.0 — 2026-09-21
+
+- Escala tipográfica como clases: `titular`, `titulo-pagina`, `titulo-seccion`,
+  `titulo-tarjeta`, `bajada`, `nota`, `cuerpo`, `cuerpo-sm`, `etiqueta` y
+  `leyenda`. Antes el paquete traía sólo las familias y cada app rearmaba los
+  tamaños con utilidades sueltas.
+- `titular` y `titulo-pagina` son fluidos: bajan a 44 y 27 px en pantalla
+  angosta sin que la app ponga breakpoints.
+
 ## 0.1.1 — 2026-09-19
 
 - `flux.css`: vuelve la regla que alinea etiqueta y control de los campos

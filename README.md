@@ -13,7 +13,7 @@ los nombres de tokens y utilidades son los mismos que usa esa app.
 Desde el repositorio (no se publica en npm):
 
 ```bash
-npm i github:guido2d/gwl_ui#v0.1.1
+npm i github:guido2d/gwl_ui#v0.2.0
 # o, trabajando en local con el repo al lado:
 npm i ../gwl_ui
 ```
@@ -104,6 +104,27 @@ color de la empresa en `--brand` (por ejemplo en el `<html>`) y todo lo que usa
 - Relleno `naranja` → texto `text-white font-bold`. Da 2,5:1 y es una decisión
   de marca (el azul oscuro encima se leía raro); el bold compensa.
 - Placeholder de campos: `zinc-600`; valor: `zinc-900`.
+
+## Escala tipográfica
+
+Una clase por rol, con familia, tamaño, interlineado, peso y tracking. El color
+va aparte: `<h1 class="titulo-pagina">` y `<p class="bajada text-zinc-600">`.
+
+| Clase | Tamaño | Peso | Para |
+| --- | --- | --- | --- |
+| `titular` | 68 → 44 px, 1.02 | 900 | Titular de un panel de presentación. Uno por página. |
+| `titulo-pagina` | 33 → 27 px, 1.12 | 900 | El h1 de una pantalla. |
+| `titulo-seccion` | 24 / 32 px | 700 | Título de una pantalla de panel o de un bloque grande. |
+| `titulo-tarjeta` | 16 / 24 px | 700 | Título de una sección, tarjeta o modal. |
+| `bajada` | 18 px, 1.6 | 400 | Bajada debajo de un titular, en `zinc-600`. |
+| `nota` | 17 px, 1.75 | 400 | Párrafo de lectura larga suelto. |
+| `cuerpo` | 16 px, 1.6 | 400 | Texto corrido por defecto. |
+| `cuerpo-sm` | 14 / 20 px | 400 | Texto de interfaz: descripciones, celdas, campos. |
+| `etiqueta` | 14 px, 1.25 | 500 | Etiqueta de un campo, en `zinc-900`. |
+| `leyenda` | 12 / 16 px | 600 | Chips, contadores y migas. |
+
+`titular` y `titulo-pagina` son fluidos (`clamp`): bajan solos en pantalla
+angosta, sin breakpoints en la app. Los títulos llevan `text-wrap: balance`.
 
 ## Utilidades
 

@@ -53,6 +53,29 @@ test('las utilidades propias del sistema se generan', async () => {
     }
 });
 
+test('la escala tipográfica está completa y en la familia que corresponde', async () => {
+    const titulos = ['titular', 'titulo-pagina', 'titulo-seccion', 'titulo-tarjeta'];
+    const textos = ['bajada', 'nota', 'cuerpo', 'cuerpo-sm', 'etiqueta', 'leyenda'];
+    const css = await compilar(entrada, [...titulos, ...textos]);
+
+    for (const clase of [...titulos, ...textos]) {
+        const regla = css.match(new RegExp(`\\.${clase} \\{[^}]+\\}`));
+
+        assert.ok(regla, `falta la clase ${clase}`);
+        assert.match(regla[0], /font-size:/);
+        assert.match(regla[0], /line-height:/);
+        assert.match(regla[0], /font-weight:/);
+        assert.match(regla[0], titulos.includes(clase) ? /--font-display/ : /--font-sans/);
+    }
+});
+
+test('los dos titulares se achican solos en pantalla angosta', async () => {
+    const css = await compilar(entrada, ['titular', 'titulo-pagina']);
+
+    assert.match(css, /\.titular \{[^}]*font-size: clamp\(2\.75rem/);
+    assert.match(css, /\.titulo-pagina \{[^}]*font-size: clamp\(1\.6875rem/);
+});
+
 test('el movimiento reducido apaga los desplazamientos', async () => {
     const css = await compilar(entrada, ['aparece']);
 
@@ -71,7 +94,7 @@ test('la capa de Flux compila sola', async () => {
 });
 
 test('ningún comentario queda abierto ni cerrado de más', () => {
-    for (const archivo of ['tokens', 'base', 'utilidades', 'movimiento', 'prosa', 'flux']) {
+    for (const archivo of ['tokens', 'base', 'tipografia', 'utilidades', 'movimiento', 'prosa', 'flux']) {
         const css = readFileSync(path.join(raiz, 'css', `${archivo}.css`), 'utf8');
         const aperturas = css.split('/*').length - 1;
         const cierres = css.split('*/').length - 1;
