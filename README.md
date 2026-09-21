@@ -123,6 +123,12 @@ va aparte: `<h1 class="titulo-pagina">` y `<p class="bajada text-zinc-600">`.
 | `etiqueta` | 14 px, 1.25 | 500 | Etiqueta de un campo, en `zinc-900`. |
 | `leyenda` | 12 / 16 px | 600 | Chips, contadores y migas. |
 
+Estas clases se emiten **antes** que las utilidades de Tailwind, así que
+`text-lg`, `font-semibold` o `leading-tight` les ganan y sirven para ajustar un
+caso puntual. La contra: un componente que imprime su propio tamaño también
+gana. Con `<flux:heading>`, que imprime `text-2xl`, usá un `<h1>` propio con la
+clase en vez del componente.
+
 `titular` y `titulo-pagina` son fluidos (`clamp`): bajan solos en pantalla
 angosta, sin breakpoints en la app. Los títulos llevan `text-wrap: balance`.
 
